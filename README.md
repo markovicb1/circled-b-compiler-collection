@@ -170,10 +170,28 @@ Assembler instructions use operands. Operands have different forms depending on 
   - [%reg + literal]: value from the memory on the address reg value + literal value
   - [%reg + symbol]: value from the memory on the address reg value + symbol value
 
-Assembler can be started from the terminal with the:
+Assembler uses Flex and GNU Bison for lexer and parser part of assembling.
+
+Assembler has to be compiled before future use with:
+
+```makefile
+make execute_assembler
+```
+
+Assembler can be started (after compilation) from the terminal with:
 
 ```
 ./assembler -o output.o input.s
+```
+
+There are predefined tests that can be run with the assembler. The tests are run with:
+
+```makefile
+make test_assemblerA
+```
+or
+```
+make test_assemblerB
 ```
  
 ## Linker
