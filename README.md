@@ -79,4 +79,33 @@ a,b,c,ddd represent GPRA, GPRB, GPRC and displacement.
 
 ## Terminal
 
+Terminal represents input/output device of the abstract computer system. It uses 2 memory mapped registers:
+
+| Register name | Memory location | Usage |
+| ------------- | --------------- | ----- |
+| term_out | 0xffffff00 - 0xffffff03 | Holds the ASCII value of the character to be printed |
+| term_in | 0xffffff04 - 0xffffff07 | Holds the ASCII value of the pressed keyboard key |
+
+It is emulators job to observe writing to the term_in register, since it has to generate hardware terminal interrupt.
+
+<termios.h> library is used for the Terminal.
+
+## System Timer
+
+The System Timer is a peripheral that periodically generates an interrupt request. The timer has one program accessible register tim_cfg which is accessed through the memory address space (memory mapped register at the 0xffffff10 - 0xffffff13).
+
+tim_cfg holds configuration code for the System Timer. Each value represents interrupt period:
+
+| Configuration value | Interrupt period in ms |
+| ------------------- | ---------------------- |
+| 0x0 | 500 |
+| 0x1 | 1000 |
+| 0x2 | 1500 |
+| 0x3 | 2000 |
+| 0x4 | 5000 |
+| 0x5 | 10 000 |
+| 0x6 | 30 000 |
+| 0x7 | 60 000 |
+
+## Compiler Collection Overview
 
