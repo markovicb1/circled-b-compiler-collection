@@ -109,3 +109,63 @@ tim_cfg holds configuration code for the System Timer. Each value represents int
 
 ## Compiler Collection Overview
 
+The core of the project is made of 3 separate CLI (Command Line Interface) programs: Assembler, Linker and Emulator. All programs are completelly written in C/C++ language with additional tools such as Flex, GNU Bison and Linux termios.
+
+The goal of the project is to completelly show the process of compilation on the example of made up assembly language, as well as executing those assembly files using Emulator for the abstract computer system. Each of the program is described in a seperate chapter.
+
+## Assembler
+
+Assembler is a program that makes an object file, a file which contains info gathered from the assembly source file. Object files are input for the Linker.
+
+Assembler gathered info:
+
+- Section table
+- Symbol table
+- Relocation tables for each section
+- Machine code
+
+In this project, Assembler is made in 2 pass version. That means there are two passes in which assembler gatheres data:
+
+First pass: Assembler gatheres all the sections, symbols, and finds sections sizes.
+
+Second pass: Assembler executes assembly directives and generates machine code alongside with the relocation records. Assembler generates an object file at the end of the execution.
+
+An object file uses ELF-like format for its simplicity and consistency, while the whole program works in a way simmilar to the gcc as (GNU Compiler Collection Assembler).
+
+In the following table are presented all the assembler directives:
+
+| Directive | Effect |
+| --------- | ------ |
+| .global symbol_list | Exports the symbols specified within the parameter list |
+| .extern symbol_list | Imports the symbols specified within the parameter list |
+| .section section_name | Starts new section while closing the previous one |
+| .word symbol_or_literal_list | Allocates 4 Bytes for each element specified within the parameter list while initializing those bytes with the symbol or literal value |
+| .skip literal | Allocates literal number of Bytes with zeros |
+| .ascii "string_value" | Allocates memory for the string provided as parameter |
+| .end | Immediately stops the Assembler |
+
+In the following table are presented all the assembler instructions not mentioned in the System Overview part. The reason is that those instructions are pseudo instructions.
+
+| Instruction | Effect | Comment |
+| --------- | -------- | ------- |
+| iret | pop pc; pop status; | Return from the Interrupt handler routine |
+| ret | pop pc; | Return from the subroutine |
+| push %gpr | sp <= sp - 4; mem32[sp] <= gpr; | Push register value to the stack |
+| pop %gpr | gpr <= mem32[sp]; sp <= sp + 4; | Pop value from the top of the stack to the register provided as parameter |
+
+Assembler instructions use operands. Operands have different forms depending on the type of instruction:
+
+- Jump instructions:
+  - literal: value of the literal
+  - symbol: value of the symbol
+- Other instructions:
+  - $literal: value of the literal
+  - $symbol: value of the symbol
+  - literal: value from the memory on the address literal value
+  - symbol: value from the memory on the address symbol value
+  - %reg: value in the register reg
+  - [%reg]: value from the memory on the address reg value
+  - [%reg + literal]: value from the memory on the address reg value + literal value
+  - [%reg + symbol]: value from the memory on the address reg value + symbol value
+ 
+## Linker
