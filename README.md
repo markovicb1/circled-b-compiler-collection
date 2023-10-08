@@ -6,6 +6,8 @@ This project represents fully functional compiler collection for abstract comput
 
 The whole project was third year's biggest obstacle, which was covered on ***System software*** course at the School of Electrical Engineering @ University of Belgrade :serbia:
 
+This whole documentation/README.md file was written according to the original serbian project documentation provided from the Faculty course.
+
 ## Computer system overview
 
 The system is made of CPU (Central Processing Unit), RAM (Random Access Memory), System Timer and Terminal. All of the components are interconnected via the system bus. System Timer and Terminal are additionally connected with the CPU using interrupt busses. The system can be presented with the following scheme:
@@ -167,5 +169,18 @@ Assembler instructions use operands. Operands have different forms depending on 
   - [%reg]: value from the memory on the address reg value
   - [%reg + literal]: value from the memory on the address reg value + literal value
   - [%reg + symbol]: value from the memory on the address reg value + symbol value
+
+Assembler can be started from the terminal with the:
+
+```
+./assembler -o output.o input.s
+```
  
 ## Linker
+
+## Emulator
+
+## Future changes
+
+
+
