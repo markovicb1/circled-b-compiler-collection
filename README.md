@@ -307,3 +307,5 @@ There are several things marked as very important when it comes to the future of
 3. C++ Error handling: C-like error handling should be replaced with the more convenient C++ error handling using Exceptions
 
 ## Legal notes
+
+Everyone can use this software according to the MIT Licence.
