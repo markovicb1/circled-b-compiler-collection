@@ -40,7 +40,7 @@ All of the instructions are performed atomically. Interrupt requests are service
 
 CPU Instructions are divided in several groups.
 
-a,b,c,ddd represent GPRA, GPRB, GPRC and displacement.
+a,b,c,ddd represent GPRA, GPRB, GPRC and displacement (12 bits).
 
 | Instruction type | Instruction modifier | Effect | Machine code |
 | ---------------- | -------------------- | ------ | ------------ |
@@ -196,7 +196,57 @@ make test_assemblerB
  
 ## Linker
 
+This type of linker is architecture-independent and does several type of jobs. There are several options available for linker:
+
+- -hex : Linker links all the input object files and produces memory initializer for the Emulator. Memory intializer is represented with the (memory address: value) pair.
+- -place=section_name@address : which places provided section on provided address. Linker ignores provided sections that don't exist.
+- -o output_file_name : used to specify object file/memory iniitializator name
+- -relocatable : This option suggests Linker to produce relocatable object file simmilar to the one produced by assembler. This file can be used as an input to linker.
+
+The way this Linker works is simmilar to the other real linkers:
+
+1. Reads input object files and stores them in internal strucures (section tables, symbol tables etc.)
+2. Checks options provided as program arguments
+3. Arranges all the sections according to the place option(s) and sequence of the input files. Joins sections with the same name.
+4. Updates all the addresses and symbol values
+5. Resolves relocation records
+6. Finalizes the machine code
+7. Produces the output file (either relocatable object file or memory initializer)
+
+Linker produces output file only and if only there are no following situations:
+
+- Multiple definition of symbols
+- Undefined symbols
+- Overlapping sections (bad -place usage)
+- Neither of -relocatable nor -hex option is provided
+
+Before any use, Linker should be compiled using:
+
+```makefile
+make execute_linker
+```
+
+The standard way to use the linker is:
+
+```
+./linker [options] input_files_list
+```
+
+There are predefined tests that can be run with the linker. The tests are run with:
+
+```makefile
+make test_linkerA
+```
+or
+```
+make test_linkerB
+```
+
 ## Emulator
+
+Emulator makes the bridge between the Abstract Computer System and the user-made input assembly files. It works with the output of Assembler and Linker, more preciselly with the memory initializer which represents the starting point of the process of emulation.
+
+
 
 ## Future changes
 
