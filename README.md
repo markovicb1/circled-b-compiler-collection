@@ -244,11 +244,66 @@ make test_linkerB
 
 ## Emulator
 
-Emulator makes the bridge between the Abstract Computer System and the user-made input assembly files. It works with the output of Assembler and Linker, more preciselly with the memory initializer which represents the starting point of the process of emulation.
+Emulator makes the bridge between the Abstract Computer System and the user-made input assembly files. It works with the output of Assembler and Linker, more preciselly with the memory initializer which represents the starting point of the process of emulation. The emulator apparently creates a memory in which the machine code is located, which in the emulation process is interpreted based on its bytes, where each byte has its own meaning.
 
+The "meaning" of the machine code is simply described with this legend:
 
+| Fourth Byte 1 | Fourth Byte 0 | Third Byte 1 | Third Byte 0 | Second Byte 1 | Second Byte 0 | First Byte 1 | First Byte 0 |
+| ------------- | ------------- | ------------ | ------------ | ------------- | ------------- | ------------ | ------------ |
+| OC | MOD | RegA | RegB | RegC | Disp[11..8] | Disp[7..4] | Disp[3..0] |
+
+Emulator decides which instruction to execute in which mode according to the most significant byte which holds OC and MOD. Instruction arguments are passed through other bytes. PC register is the one that holds the value of the next instruction to be executed. If the wrong OC is read, emulator stops the process of the emulation. This is done this way because there is no predefined interrupt handler that can handle this situation.
+
+Emulator lifecycle can be described using the following list:
+
+1. Reads input memory initializer
+2. Allocates memory needed by the hex file
+3. Sets PC value to 0x40000000, which is the first address of execution in the Abstract Computer System
+4. Reads machine code from the address present in the PC
+5. Resolves machine code and checks for the interrupt requests
+6. LOOP!!!
+7. Finishes the process of emulation whenever the halt instruction is executed
+
+For all info on the Abstract Computer System which is emulated, please chech the introduction chapter.
+
+Before any use, Emulator should be compiled using:
+
+```makefile
+make execute_emulator
+```
+
+The standard way to use the emulator is:
+
+```
+./emulator memory_initializer_file
+```
+
+There are predefined tests that can be run with the emulator. Before any use, read the test assembly files, or check readme files in the corresponding test folders. Test emulator with:
+
+```makefile
+make test_emulatorA
+```
+or
+```makefile
+make test_emulatorB
+```
+
+If you want to try tests without any manual work (compilation of each program etc.), use one of the following make commands:
+
+```makefile
+make test_allA
+```
+or
+```makefile
+make test_allB
+```
 
 ## Future changes
 
+There are several things marked as very important when it comes to the future of the project
 
+1. Code refactor: Even though the code respects the Clean Code principles, one of the most important rules is broken on some places - DRY (DO NOT REPEAT YOURSELF) Principle. There are also several functions that were made in some occasion but never used - those functions should be deleted from the source code.
+2. Addition of several new functionalities: There are some things such as .equ directive and System Timer in Emulator, that should be added
+3. C++ Error handling: C-like error handling should be replaced with the more convenient C++ error handling using Exceptions
 
+## Legal notes
